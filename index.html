@@ -6,6 +6,8 @@
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <meta content="#080916" name="theme-color"/>
 <meta content="Web oficial de Ecos de Voces Virtual 2027: galas, criterios artísticos, favorito semanal, equipo y comunidad." name="description"/>
+<link rel="icon" type="image/png" href="assets/images/general/logo-cabecera.png"/>
+<link rel="apple-touch-icon" href="assets/images/general/logo-cabecera.png"/>
 <title>Ecos de Voces Virtual 2027 | Galas, equipo y comunidad</title>
 <style>
 :root{--bg:#080916;--panel:#111329;--panel2:#181b37;--white:#fbfaff;--muted:#b8bdd7;--line:#ffffff19;--cyan:#6ce9dc;--violet:#b78aff;--pink:#ff9dce;--gold:#ffd995;--radius:22px;--max:1180px}
@@ -445,6 +447,10 @@ footer{border-top:1px solid var(--line);padding:28px 0 34px;color:var(--muted);f
 @media(max-width:600px){
  #equipo .presentation-grid,.presentation-grid{grid-template-columns:minmax(0,1fr) !important}
 }
+/* Estética coherente de los tres botones de inicio */
+#tab-inicio .tab-home-card .btn{opacity:1!important;filter:none!important;color:#fff!important;background:linear-gradient(115deg,#ed368c,#a24fff)!important;border:1px solid #ffb4e8!important;box-shadow:0 7px 22px #e2329d66!important;font-weight:800!important}
+#tab-inicio .tab-home-card .btn:hover{transform:translateY(-2px);box-shadow:0 10px 30px #e2329d99!important}
+#tab-inicio .tab-home-card .btn:focus-visible{outline:3px solid #fff;outline-offset:3px}
 </style></head>
 <body>
 <div class="topglow"></div>
@@ -856,7 +862,15 @@ privilegeRows.innerHTML=galaNames.slice(0,9).map((name,i)=>`<tr><td>${name}</td>
    tabButtons.forEach(b=>{const on=b.dataset.pageTab===name;b.setAttribute('aria-selected',String(on));b.tabIndex=on?0:-1;});
    panels.forEach(p=>{const on=p.dataset.pageTab===name;p.hidden=!on;p.classList.toggle('is-active',on);});
    if(updateHash){try{history.replaceState(null,'','#tab-'+name)}catch(e){}}
-   window.scrollTo({top:0,behavior:'smooth'});
+   if(updateHash){
+     const activePanel=panels.find(p=>p.dataset.pageTab===name);
+     if(activePanel){
+       const sticky=document.querySelector('.page-tabs-wrap');
+       const offset=(sticky?sticky.getBoundingClientRect().height:0)+12;
+       const top=window.scrollY+activePanel.getBoundingClientRect().top-offset;
+       window.scrollTo({top:Math.max(0,top),behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
+     }
+   }
  }
  tabButtons.forEach((b,i)=>{
    b.addEventListener('click',()=>activateTab(b.dataset.pageTab));
@@ -890,7 +904,4 @@ privilegeRows.innerHTML=galaNames.slice(0,9).map((name,i)=>`<tr><td>${name}</td>
 })();
 </script>
 </body>
-</html><style>
-#tab-inicio .tab-home-card .btn.btn-secondary{opacity:1!important;filter:none!important;color:#fff!important;background:linear-gradient(115deg,#ed368c,#a24fff)!important;border:1px solid #ffb4e8!important;box-shadow:0 7px 22px #e2329d66!important;font-weight:800!important}
-#tab-inicio .tab-home-card .btn.btn-secondary:hover{transform:translateY(-2px);box-shadow:0 10px 30px #e2329d99!important}
-</style>
+</html>
